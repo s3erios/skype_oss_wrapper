@@ -30,7 +30,7 @@ void pa_context_set_state_callback (int* c, pa_context_notify_cb_t cb, void *use
 
 static int in_thread=0;
 
-static char version[1000]="no pulse, lol";
+const static char version[]="no pulse, lol";
 
 int* pa_cvolume_set(int* a,	unsigned  	channels, uint32_t v){
     log("pa_cvolume_set: not implemented\n");
@@ -548,7 +548,7 @@ pa_mainloop_api* pa_threaded_mainloop_get_api (int * m){
 
 /* This is a complete list of pulseaudio symbols: */
 
-#define NOT_IMPLEMENTED(f) int f(){ printf("NOT IMPLEMENTED:" #f  "\n"); return -1;};
+#define NOT_IMPLEMENTED(f) int f(){ printf("%s" #f  "\n", "NOT IMPLEMENTED: "); return -1;};
 
 NOT_IMPLEMENTED(pa_accept_cloexec)
 NOT_IMPLEMENTED(pa_ascii_filter)
