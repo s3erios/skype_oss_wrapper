@@ -34,6 +34,7 @@ static char version[1000]="no pulse, lol";
 
 int* pa_cvolume_set(int* a,	unsigned  	channels, uint32_t v){
     log("pa_cvolume_set: not implemented\n");
+    return NULL;
 }
 
 void pa_threaded_mainloop_lock (int *m){
@@ -264,6 +265,7 @@ static void *oss_thread_function(void *s1){
         }
     }
     log("exiting oss thread\n");
+    return NULL;
 }
 
 
@@ -415,7 +417,7 @@ void pa_context_set_subscribe_callback  (int *c, pa_context_subscribe_cb_t  cb, 
 
 int* pa_context_subscribe(int *c, pa_subscription_mask_t m, pa_context_success_cb_t cb, void *userdata){
     log("pa_context_subscribe: subscribing mask=%0x   callback=%p   userdata=%p \n", m, cb, userdata);
- 
+    return NULL;
 }
 
 int pa_context_connect (int * c, const char * server, int flags, pa_spawn_api *api){
@@ -549,7 +551,7 @@ pa_mainloop_api* pa_threaded_mainloop_get_api (int * m){
 
 /* This is a complete list of pulseaudio symbols: */
 
-#define NOT_IMPLEMENTED(f) int f(){ printf("NOT IMPLEMENTED:" #f  "\n"); };
+#define NOT_IMPLEMENTED(f) int f(){ printf("NOT IMPLEMENTED:" #f  "\n"); return -1;};
 
 NOT_IMPLEMENTED(pa_accept_cloexec)
 NOT_IMPLEMENTED(pa_ascii_filter)
