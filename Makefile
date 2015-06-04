@@ -1,24 +1,35 @@
-CFLAGS += -O0 -ggdb -fPIC
+CC	?= cc
+MKDIR	?= mkdir
+INSTALL	?= install
 
-PREFIX := $(PREFIX)
+CFLAGS  ?= -O0 -ggdb
+CFLAGS	+= -m32 -fPIC
+LDFLAGS += -shared
+LIBS	 = -lpthread
 
+PREFIX	?= /usr
+BIN_DIR	?= ${PREFIX}/bin
+LIB_DIR ?= ${PREFIX}/lib/skype_oss_wrapper
 
-ifndef PREFIX
-	PREFIX = /usr
-endif
+OBJECTS	 = libpulse.o
+TARGET	 = libpulse.so.0
+WRAPPER	 = skype_oss
 
-LIB_DIR = ${PREFIX}/lib/skype_oss_wrapper
-BIN_DIR = ${PREFIX}/bin
+.PHONY:	all install clean
 
-.PHONY : all clean
+all:    ${TARGET} ${WRAPPER}
 
-all:
-	cc ${CFLAGS} -m32 -shared -o libpulse.so.0 libpulse.c
-	echo "#!/bin/sh" > skype_oss && echo "LD_LIBRARY_PATH=${LIB_DIR}:\$$LD_LIBRARY_PATH skype" >> skype_oss && chmod +x skype_oss
-	echo "#!/bin/sh" > installer && echo "mkdir -p \$$DESTDIR/${LIB_DIR} && mkdir -p \$$DESTDIR/${BIN_DIR} && cp skype_oss \$$DESTDIR/${BIN_DIR}/ && cp libpulse.so.0 \$$DESTDIR/${LIB_DIR}/" >> installer && chmod +x installer
+${TARGET}:	${OBJECTS}
+	${CC} -m32 ${OBJECTS} -o ${TARGET} ${LDFLAGS} ${LIBS}
 
-install:
-	./installer
+${WRAPPER}:
+	echo "#!/bin/sh" > ${WRAPPER} && echo "LD_LIBRARY_PATH=${LIB_DIR}:\$$LD_LIBRARY_PATH skype" >> ${WRAPPER} && chmod +x ${WRAPPER}
+
+install:	all
+	${MKDIR} -p ${DESTDIR}${LIB_DIR}
+	${MKDIR} -p ${DESTDIR}${BIN_DIR}
+	${INSTALL} -m 755 ${WRAPPER} ${DESTDIR}${BIN_DIR}
+	${INSTALL} -m 755 ${TARGET} ${DESTDIR}${LIB_DIR}
 
 clean:
-	rm libpulse.so.0 skype_oss installer
+	rm -f ${WRAPPER} ${TARGET} ${OBJECTS}
