@@ -318,7 +318,7 @@ int pa_stream_connect_playback (stream_t *s, const char *dev, const pa_buffer_at
     
     s->running=1;
     
-    pthread_create(&s->thread, NULL, (void* )oss_thread_function, s);
+    pthread_create(&s->thread, NULL, oss_thread_function, s);
     //pthread_detach(s->thread);
     
     return 0;
@@ -471,9 +471,6 @@ static void* d_io_new(){
 }
 static void d_io_enable(){
     log("io_enable\n");
-}
-static void d_io_free(){
-    log("io_free\n");
 }
 static void d_io_set_destroy(){
     log("io_set_destroy\n");
