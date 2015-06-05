@@ -23,7 +23,9 @@ ${TARGET}:	${OBJECTS}
 	${CC} -m32 ${OBJECTS} -o ${TARGET} ${LDFLAGS} ${LIBS}
 
 ${WRAPPER}:
-	echo "#!/bin/sh" > ${WRAPPER} && echo "LD_LIBRARY_PATH=${LIB_DIR}:\$$LD_LIBRARY_PATH skype" >> ${WRAPPER} && chmod +x ${WRAPPER}
+	echo "#!/bin/sh" > ${WRAPPER}
+	echo "LD_LIBRARY_PATH=${LIB_DIR}:\$$LD_LIBRARY_PATH skype \"\$$@\"" >> ${WRAPPER}
+	chmod +x ${WRAPPER}
 
 install:	all
 	${MKDIR} -p ${DESTDIR}${LIB_DIR}
